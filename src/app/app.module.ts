@@ -5,18 +5,27 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadFileFormComponent } from './upload-file-form/upload-file-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { UploadFileService } from './upload-file-form/services/upload-file.service';
+// import { DisableControlDirective } from './disable-control.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UploadFileFormComponent
+    UploadFileFormComponent,
+    // DisableControlDirective
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgbModule
+    NgbModule,
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [UploadFileService,
+    // DisableControlDirective
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
