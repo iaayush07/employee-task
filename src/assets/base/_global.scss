@@ -9,3 +9,15 @@ body {
     height: 100%;
     width: 100%;
 }
+
+.overlay-backdrop {
+    background-color: rgba(0, 0, 0, .5);
+}
+
+.overlay-panel {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 20px;
+    z-index: 10;
+}

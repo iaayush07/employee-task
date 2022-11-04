@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, NgControl, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UploadFileService } from './services/upload-file.service';
-import { map } from 'rxjs/operators'
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
+import { uploadFile } from './model/upload-file.model';
 
 @Component({
   selector: 'app-upload-file-form',
@@ -18,11 +18,13 @@ export class UploadFileFormComponent implements OnInit {
   public base64String2: any;
   public isSubmitted: boolean;
   public barWidth: string = ''
+  percentDone: number;
+  uploadSuccess: boolean;
   //progressBar
 
   fileselected: any
 
-  constructor(private fb: FormBuilder, private uploadFileService: UploadFileService, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private uploadFileService: UploadFileService, private http: HttpClient, private router: Router) {
     this.register = this.fb.group({
       file1: ['', [Validators.required]],
       file2: ['', [Validators.required]],
@@ -30,11 +32,12 @@ export class UploadFileFormComponent implements OnInit {
     })
 
     this.isSubmitted = false;
+    this.uploadSuccess = false;
 
     ///--------------------------
     this.register.get('file2')?.disable()
 
-
+    this.percentDone = 0
   }
 
   ngOnInit(): void {
@@ -55,9 +58,11 @@ export class UploadFileFormComponent implements OnInit {
     reader.readAsDataURL(this.imageFile);
     reader.onload = () => {
       this.base64String = String(reader.result);
-      // this.base64String2 = String(reader.result);
-      // console.log(this.base64String);
     }
+    this.register.controls['path'].patchValue(this.base64String);
+    this.uploadFileService.postImage(this.register.value).subscribe((data) => {
+    })
+
 
     //for enable or
     if (this.register.controls['file1'].valid) {
@@ -76,7 +81,12 @@ export class UploadFileFormComponent implements OnInit {
       this.base64String2 = String(reader.result);
       // console.log(this.base64String);
     }
-
+    //------------------
+    this.register.controls['path'].patchValue(this.base64String);
+    this.uploadFileService.postImage(this.register.value).subscribe((data) => {
+      console.log(data);
+    })
+    console.log(this.register)
     // if (this.imageFile) {
     //   this.isImagevalue = true;
     // }
@@ -84,24 +94,26 @@ export class UploadFileFormComponent implements OnInit {
       this.register.get('file2')?.enable()
     }
   }
-  onSave() {
+  onNext() {
 
     this.isSubmitted = true;
-    this.register.controls['path'].patchValue(this.base64String);
-    this.uploadFileService.postImage(this.register.value).subscribe((data) => {
-      console.log(data);
 
-    })
-    console.log(this.register)
-    // this.router.navigate([''])
+    this.router.navigate(['/employee'])
   }
 
-  // saveFile() {
-  //   let fmData = new FormData();
-  //   fmData.append("file", this.fileselected as any);
-  //   this.uploadFileService.postImage(this.register.value, fmData, {
+  uploadAndProgress(files: uploadFile[]) {
+    var formData = new FormData();
+    Array.from(files).forEach((f: any) => formData.append('file', f))
 
-  //   })
+    this.http.post("http://localhost:3000/uploadFile/", this.register.value, { reportProgress: true, observe: 'events' })
+      .subscribe((event: any) => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.percentDone = Math.round(100 * event.loaded / event.total);
+        } else if (event instanceof HttpResponse) {
+          this.uploadSuccess = true;
+        }
+      });
+  }
 
 }
 

@@ -5,9 +5,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UploadFileFormComponent } from './upload-file-form/upload-file-form.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { UploadFileService } from './upload-file-form/services/upload-file.service';
+import { OverlayService } from './employee/services/overlay.service';
 // import { DisableControlDirective } from './disable-control.directive';
 
 @NgModule({
@@ -21,10 +22,12 @@ import { UploadFileService } from './upload-file-form/services/upload-file.servi
     AppRoutingModule,
     NgbModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
-  providers: [UploadFileService,
-    // DisableControlDirective
+  providers: [
+    UploadFileService,
+    OverlayService
   ],
   bootstrap: [AppComponent]
 })

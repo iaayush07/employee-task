@@ -24,9 +24,10 @@
                                             </div>
                                         </div>
                                         <div class="progress">
-                                            <span [innerHTML]="barWidth"></span>
+                                            <!-- {{percentDone}} -->
+                                            <!-- <span [innerHTML]="barWidth"></span>
                                             <div class="progress-bar w-75" [style.width]="barWidth" role="progressbar">
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -50,8 +51,8 @@
                             </div>
                             <div class="row">
                                 <div class="col mt-3 d-flex align-items-center justify-content-center">
-                                    <button class="btn btn-primary" type="submit" (click)="onSave()"
-                                        [disabled]="register.invalid">submit</button>
+                                    <button class="btn btn-primary" type="button" (click)="onNext()"
+                                        [disabled]="register.invalid">Next</button>
                                 </div>
                             </div>
                         </form>
